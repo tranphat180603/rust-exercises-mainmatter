@@ -1,3 +1,5 @@
+use core::panic;
+
 struct Ticket {
     title: String,
     description: String,
@@ -18,7 +20,27 @@ impl Ticket {
     // as well as some `String` methods. Use the documentation of Rust's standard library
     // to find the most appropriate options -> https://doc.rust-lang.org/std/string/struct.String.html
     fn new(title: String, description: String, status: String) -> Self {
-        todo!();
+        let title_size: usize = title.len();
+        let description_size: usize = description.len();
+        if title_size == 0{
+            panic!("Title cannot be empty");
+        }
+        else if title_size > 50{
+            panic!("Title cannot be longer than 50 bytes");
+        }
+
+        if description_size == 0{
+            panic!("Description cannot be empty");
+        }
+        else if description_size > 500{
+            panic!("Description cannot be longer than 500 bytes");
+        }
+        
+        let allowed_status = ["To-Do", "In Progress", "Done"];
+        if !allowed_status.contains(&status.as_str()){
+            panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed");
+        }
+
         Self {
             title,
             description,
