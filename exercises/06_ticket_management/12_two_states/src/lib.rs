@@ -13,7 +13,7 @@ pub struct TicketStore {
     tickets: Vec<Ticket>,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
 pub struct TicketId(u64);
 
 #[derive(Clone, Debug, PartialEq)]
@@ -44,8 +44,23 @@ impl TicketStore {
         }
     }
 
-    pub fn add_ticket(&mut self, ticket: Ticket) {
-        self.tickets.push(ticket);
+    pub fn add_ticket(&mut self, ticket: TicketDraft) -> TicketId {
+        let final_ticket = Ticket{
+            id: TicketId(self.tickets.len() as u64),
+            title: ticket.title,
+            description: ticket.description,
+            status: Status::ToDo,
+        };
+        let id = final_ticket.id;
+        self.tickets.push(final_ticket);
+        id
+    }
+
+    pub fn get<'a>(&'a self, id: TicketId) -> Option<&'a Ticket>{
+        if id.0 < self.tickets.len() as u64{
+            return self.tickets.get(id.0 as usize);
+        }
+        None
     }
 }
 

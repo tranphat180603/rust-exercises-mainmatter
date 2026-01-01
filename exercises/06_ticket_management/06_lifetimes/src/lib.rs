@@ -6,6 +6,20 @@ pub struct TicketStore {
     tickets: Vec<Ticket>,
 }
 
+// 1. We declare a lifetime 'a to say "The iterator lives as long as the store"
+impl<'a> IntoIterator for &'a TicketStore {
+    // 2. We return REFERENCES to tickets, not tickets themselves
+    type Item = &'a Ticket;
+    
+    // 3. We use the slice iterator (which handles &T)
+    type IntoIter = std::slice::Iter<'a, Ticket>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        // 4. We use .iter() to get references
+        self.tickets.iter()
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Ticket {
     pub title: TicketTitle,

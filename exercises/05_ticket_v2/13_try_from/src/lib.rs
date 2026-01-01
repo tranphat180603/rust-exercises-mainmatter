@@ -8,6 +8,30 @@ enum Status {
     Done,
 }
 
+// 1. Implement for &str (String Slices)
+impl TryFrom<&str> for Status {
+    type Error = String; // We define the error type here
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        // value.to_lowercase() returns a new String.
+        // We use .as_str() to convert it to a slice so we can match against string literals.
+        match value.to_lowercase().as_str() {
+            "todo" => Ok(Status::ToDo),
+            "inprogress" => Ok(Status::InProgress),
+            "done" => Ok(Status::Done),
+            _ => Err("Status must be one of: ToDo, InProgress, Done".to_string()),
+        }
+    }
+}
+
+impl TryFrom<String> for Status{
+    type Error = String;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        Status::try_from(value.as_str())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
